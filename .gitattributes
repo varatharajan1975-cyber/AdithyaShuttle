@@ -1,0 +1,13 @@
+# Normalise line endings to LF in the repository. The site builds on Linux
+# (Vercel), so committing CRLF would produce noisy cross-platform diffs.
+* text=auto eol=lf
+
+# Binary assets must never be line-ending normalised.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.woff binary
+*.woff2 binary

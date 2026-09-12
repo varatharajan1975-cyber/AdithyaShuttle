@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+/* -------------------------------------------------------------------------- */
+/* Design tokens                                                              */
+/*                                                                            */
+/* The palette is taken from the academy's shield logo: saturated gold and     */
+/* brushed silver on near-black. The site is deliberately dark-only — a light  */
+/* variant would fight the brand mark, so `color-scheme` is pinned to dark.    */
+/* -------------------------------------------------------------------------- */
+
+@theme {
+  /* Surfaces, darkest to lightest */
+  --color-ink: #07070a;
+  --color-ink-2: #0b0b11;
+  --color-ink-3: #101018;
+  --color-ink-4: #17171f;
+  --color-line: #23232f;
+  --color-line-2: #2e2e3d;
+
+  /* Gold — primary accent */
+  --color-gold-100: #fdf3d2;
+  --color-gold-200: #f9e5a0;
+  --color-gold-300: #f2cb5b;
+  --color-gold-400: #e8b22e;
+  --color-gold-500: #d4971b;
+  --color-gold-600: #ab7714;
+  --color-gold-700: #7d560f;
+
+  /* Silver — secondary accent, used for the chrome-y headline treatment */
+  --color-silver-100: #f4f5f7;
+  --color-silver-200: #dcdfe5;
+  --color-silver-300: #b8bdc8;
+  --color-silver-400: #8f95a3;
+  --color-silver-500: #6b7180;
+
+  /* Typography */
+  --font-display: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Motion */
+  --animate-float: float 9s ease-in-out infinite;
+  --animate-drift: drift 24s linear infinite;
+  --animate-shimmer: shimmer 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-18px) rotate(6deg);
+  }
+}
+
+@keyframes drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 120px 120px;
+  }
+}
+
+@keyframes shimmer {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Base                                                                       */
+/* -------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: dark;
+  --header-height: 4.5rem;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Keep anchored sections clear of the sticky header. */
+  scroll-padding-top: calc(var(--header-height) + 1.5rem);
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+body {
+  background-color: var(--color-ink);
+  color: var(--color-silver-100);
+  font-family: var(--font-sans);
+  /* Stops iOS Safari from inflating text in landscape. */
+  -webkit-text-size-adjust: 100%;
+}
+
+::selection {
+  background-color: var(--color-gold-400);
+  color: var(--color-ink);
+}
+
+/* A single, consistent focus ring for every interactive element. Never
+   removed — keyboard users need it and it is a WCAG requirement. */
+:where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-gold-300);
+  outline-offset: 3px;
+  border-radius: 0.25rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Scroll reveal                                                              */
+/*                                                                            */
+/* Elements start offset and fade in when scrolled into view. The <noscript>   */
+/* override in layout.tsx guarantees content is visible if JS never runs, so   */
+/* this can never hide content from a crawler or a user on a failed bundle.    */
+/* -------------------------------------------------------------------------- */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal][data-shown="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Utilities                                                                  */
+/* -------------------------------------------------------------------------- */
+
+/** Brushed-gold text, matching the logo's metallic fill. */
+@utility text-gold-gradient {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-gold-200) 0%,
+    var(--color-gold-400) 28%,
+    var(--color-gold-100) 50%,
+    var(--color-gold-400) 72%,
+    var(--color-gold-300) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/** Chrome/silver text, matching the logo's "AS" monogram. */
+@utility text-silver-gradient {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-silver-300) 0%,
+    var(--color-silver-100) 30%,
+    var(--color-silver-200) 55%,
+    var(--color-silver-400) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/** Standard raised card surface. */
+@utility surface-card {
+  background-image: linear-gradient(
+    160deg,
+    var(--color-ink-3) 0%,
+    var(--color-ink-2) 100%
+  );
+  border: 1px solid var(--color-line);
+}
+
+/** Faint badminton-court line grid, used behind hero and CTA bands. */
+@utility court-grid {
+  background-image:
+    linear-gradient(to right, rgba(232, 178, 46, 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(232, 178, 46, 0.07) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
