@@ -335,18 +335,47 @@ export const HIGHLIGHTS = [
 /* -------------------------------------------------------------------------- */
 
 /**
- * TODO(owner): replace each `src: null` with a real photo path once photos of
- * the courts are available, e.g. `src: "/gallery/court-madhavaram.jpg"`.
- * Until then the grid renders on-brand illustrated tiles rather than stock
- * photography of somebody else's facility.
+ * Photographs of both branches, taken from the academy's own Turf Town and
+ * Playo venue listings. Three per branch, every one an empty court — there are
+ * no identifiable people in any of them, so nothing here needs consent.
+ *
+ * `art` is the fallback illustration drawn if `src` is ever set back to null,
+ * so a removed photo degrades to on-brand artwork rather than a broken tile.
+ *
+ * To add more: drop the file in `public/gallery/` and add a row here.
  */
 export const GALLERY: GalleryItem[] = [
-  { src: null, alt: "Main court at Madhavaram", art: "court", featured: true },
-  { src: null, alt: "Warm-up and rally practice", art: "rally" },
-  { src: null, alt: "Shuttlecocks ready for a session", art: "shuttle" },
-  { src: null, alt: "Net and service boxes", art: "net" },
-  { src: null, alt: "Court at Thirumullaivoyal", art: "court" },
-  { src: null, alt: "Evening academy batch", art: "rally" },
+  {
+    src: "/gallery/madhavaram-main-court.jpg",
+    alt: "Main badminton court at the Madhavaram branch",
+    art: "court",
+    featured: true,
+  },
+  {
+    src: "/gallery/thirumullaivoyal-show-court.jpg",
+    alt: "Badminton court at the Thirumullaivoyal branch",
+    art: "court",
+  },
+  {
+    src: "/gallery/madhavaram-net.jpg",
+    alt: "Net and service lines on the Madhavaram court",
+    art: "net",
+  },
+  {
+    src: "/gallery/thirumullaivoyal-courts.jpg",
+    alt: "Full court view at the Thirumullaivoyal branch",
+    art: "court",
+  },
+  {
+    src: "/gallery/madhavaram-floodlights.jpg",
+    alt: "Madhavaram court under floodlights",
+    art: "rally",
+  },
+  {
+    src: "/gallery/thirumullaivoyal-surface.jpg",
+    alt: "Court surface and markings at Thirumullaivoyal",
+    art: "court",
+  },
 ];
 
 /* -------------------------------------------------------------------------- */

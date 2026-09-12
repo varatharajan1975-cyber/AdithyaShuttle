@@ -56,12 +56,19 @@ filled in.
 | Email address | `CONTACT.email` | Email card hidden |
 | Thirumullaivoyal opening hours | `BRANCHES[0].hours` | Hours line hidden on that branch only |
 | Real logo file | save as `public/logo.png`, then set `BRAND.logo` | Uses the interim `/logo.svg` mark |
-| Court photographs | `GALLERY[].src` | Tiles render illustrated placeholders instead of photos |
 | Batch timings and fees | `PROGRAMMES` | Training section points people to enquire instead |
 
-Photos go in `public/gallery/` and are referenced as `/gallery/name.jpg`. As soon
-as any tile has a real `src`, the gallery lightbox activates for it
-automatically.
+### Gallery photos
+
+`public/gallery/` holds six photographs — three per branch — sourced from the
+academy's own Turf Town and Playo venue listings, resized to 1400px wide and
+re-encoded as progressive JPEG (~50–110 KB each). Every one is an empty court:
+no identifiable people appear, so none of them raise a consent question.
+
+To add more, drop the file in `public/gallery/` and add a row to `GALLERY`. Any
+tile whose `src` is set back to `null` falls back to the illustrated artwork
+named by its `art` field rather than breaking. The lightbox activates
+automatically for whichever tiles have real photos.
 
 ## Deployment
 
@@ -84,8 +91,9 @@ attached. There are no secrets in this project.
   Sports Academy", Turf Town says "Adithya Badminton Academy", Playo says
   "Aditya Sports Academy". Search engines may treat these as different
   businesses. Worth aligning at the source.
-- **No stock photography.** Placeholder gallery tiles are drawn as SVG rather
-  than filled with photos of other people's facilities.
+- **No stock photography.** Every gallery photo is of the academy's own courts.
+  Any tile without a real photo falls back to SVG artwork rather than a picture
+  of somebody else's facility.
 - **Structured data only emits verified facts.** `src/components/structured-data.tsx`
   omits phone, hours and ratings when they are unknown, rather than inventing
   them — fabricated values are a Google structured-data policy violation.

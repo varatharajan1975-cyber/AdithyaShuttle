@@ -35,7 +35,7 @@ export function Gallery() {
           Inside the <span className="text-gold-gradient">academy</span>
         </>
       }
-      intro="The courts, the batches and the evenings that fill them."
+      intro="Both branches, exactly as they look when you walk in."
     >
       {/*
         Uniform grid rows rather than per-tile aspect ratios, so the featured
@@ -58,9 +58,12 @@ export function Gallery() {
                 <figure className="group relative h-full overflow-hidden rounded-2xl border border-line bg-ink-2">
                   {item.src ? (
                     <>
+                      {/* alt is empty because the visible figcaption below
+                          already names the image — labelling both makes a
+                          screen reader announce it twice. */}
                       <Image
                         src={item.src}
-                        alt={item.alt}
+                        alt=""
                         fill
                         sizes="(min-width: 1024px) 33vw, 50vw"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -68,7 +71,7 @@ export function Gallery() {
                       <button
                         type="button"
                         onClick={() => setLightboxIndex(photoIndex)}
-                        className="absolute inset-0 cursor-zoom-in bg-gradient-to-t from-ink/70 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                        className="absolute inset-0 cursor-zoom-in rounded-2xl ring-gold-400/0 transition-all duration-300 group-hover:ring-2 group-hover:ring-inset group-hover:ring-gold-400/40"
                       >
                         <span className="sr-only">
                           View larger: {item.alt}
@@ -76,13 +79,12 @@ export function Gallery() {
                       </button>
                     </>
                   ) : (
-                    <>
-                      <CourtArt art={item.art} />
-                      <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink via-ink/70 to-transparent p-4 text-[0.7rem] font-medium tracking-wide text-silver-400 sm:text-xs">
-                        {item.alt}
-                      </figcaption>
-                    </>
+                    <CourtArt art={item.art} />
                   )}
+
+                  <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink via-ink/75 to-transparent p-4 text-[0.7rem] font-medium tracking-wide text-silver-300 sm:text-xs">
+                    {item.alt}
+                  </figcaption>
                 </figure>
               </Reveal>
             </li>
