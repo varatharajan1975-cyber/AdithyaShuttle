@@ -1,6 +1,8 @@
 import { Cta } from "./ui/cta";
 import { Reveal } from "./ui/reveal";
 import { Section } from "./ui/section";
+import { CopyButton } from "./ui/copy-button";
+import { OpenStatus } from "./ui/open-status";
 import {
   ClockIcon,
   InstagramIcon,
@@ -10,6 +12,7 @@ import {
   WhatsAppIcon,
 } from "./ui/icons";
 import { BRANCHES, CONTACT } from "@/content/site";
+import { formatHours } from "@/lib/hours";
 
 /** What people actually message the academy about. */
 const ENQUIRY_TOPICS = [
@@ -84,21 +87,22 @@ export function Contact() {
     <Section
       id="contact"
       eyebrow="Contact"
+      split
       title={
         <>
-          Come and <span className="text-gold-gradient">play</span>
+          Come and <span className="accent-word text-amber-300">play</span>
         </>
       }
       intro="Questions about batches, court availability or a group booking? Reach us on any of these."
     >
-      <div className="grid gap-4 lg:grid-cols-5">
+      <div className="grid gap-6 lg:grid-cols-5">
         <Reveal className="lg:col-span-2">
-          <div className="surface-card flex h-full flex-col gap-3 rounded-2xl p-7 sm:p-8">
-            <h3 className="font-display text-lg font-bold text-silver-100">
+          <div className="panel flex h-full flex-col rounded-3xl p-7 sm:p-8">
+            <h3 className="font-display text-xl font-semibold tracking-tight text-text">
               Talk to us
             </h3>
 
-            <ul className="mt-2 space-y-3" aria-label="Contact channels">
+            <ul className="mt-6 space-y-2.5" aria-label="Contact channels">
               {channels.map(({ key, Glyph, label, value, href }) => (
                 <li key={key}>
                   <a
@@ -106,16 +110,16 @@ export function Contact() {
                     {...(href.startsWith("http")
                       ? { target: "_blank", rel: "noopener noreferrer" }
                       : {})}
-                    className="group flex items-center gap-4 rounded-xl border border-line bg-ink/50 p-4 transition-colors hover:border-gold-500/45 hover:bg-ink-3"
+                    className="group flex items-center gap-4 rounded-2xl border border-hairline bg-surface-2 p-4 transition-colors duration-300 hover:border-amber-400/45 hover:bg-surface-3"
                   >
-                    <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-lg border border-gold-500/25 bg-gold-500/10 text-gold-300">
-                      <Glyph className="size-4.5" />
+                    <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-full border border-amber-500/25 bg-amber-500/10 text-amber-300">
+                      <Glyph className="size-[1.05rem]" />
                     </span>
                     <span className="min-w-0">
-                      <span className="block text-[0.7rem] font-semibold tracking-[0.16em] text-silver-500 uppercase">
+                      <span className="block text-[0.68rem] font-semibold tracking-[0.18em] text-faint uppercase">
                         {label}
                       </span>
-                      <span className="block truncate text-sm font-medium text-silver-200 transition-colors group-hover:text-gold-200">
+                      <span className="block truncate text-sm font-medium text-text transition-colors group-hover:text-amber-200">
                         {value}
                       </span>
                     </span>
@@ -124,19 +128,19 @@ export function Contact() {
               ))}
             </ul>
 
-            <div className="mt-auto pt-8">
-              <h4 className="text-[0.7rem] font-semibold tracking-[0.18em] text-silver-500 uppercase">
+            <div className="mt-auto pt-10">
+              <h4 className="text-[0.68rem] font-semibold tracking-[0.18em] text-faint uppercase">
                 Ask us about
               </h4>
-              <ul className="mt-4 space-y-2.5">
+              <ul className="mt-5 space-y-3">
                 {ENQUIRY_TOPICS.map((topic) => (
                   <li
                     key={topic}
-                    className="flex items-start gap-3 text-sm text-silver-400"
+                    className="flex items-start gap-3 text-sm text-muted"
                   >
                     <span
                       aria-hidden="true"
-                      className="mt-2.5 h-px w-3 shrink-0 bg-gold-500/70"
+                      className="mt-2.5 h-px w-3 shrink-0 bg-amber-500/70"
                     />
                     {topic}
                   </li>
@@ -147,45 +151,82 @@ export function Contact() {
         </Reveal>
 
         <Reveal delay={90} className="lg:col-span-3">
-          <div className="surface-card flex h-full flex-col rounded-2xl p-7 sm:p-8">
-            <h3 className="font-display text-lg font-bold text-silver-100">
-              Find a branch
-            </h3>
+          {/*
+            No `h-full` / `flex-1` here. Stretching this column to the grid row
+            height and then dividing it between two `flex-1` cards compressed
+            each card below its own content, and `overflow-hidden` on the
+            rounded card clipped the buttons clean off. Natural height instead.
+          */}
+          <div className="flex flex-col gap-6">
+            {BRANCHES.map((branch) => {
+              const hours = formatHours(branch.hours);
+              const address = branch.addressLines.join(", ");
 
-            <ul className="mt-5 flex-1 space-y-4">
-              {BRANCHES.map((branch) => (
-                <li
+              return (
+                <div
                   key={branch.slug}
-                  className="rounded-xl border border-line bg-ink/50 p-5"
+                  className="panel overflow-hidden rounded-3xl"
                 >
-                  <div className="flex flex-wrap items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <h4 className="font-display text-base font-bold text-silver-100">
-                        {branch.name}
-                      </h4>
-                      <p className="mt-2 flex gap-2.5 text-sm leading-relaxed text-silver-400">
-                        <MapPinIcon className="mt-0.5 size-4 shrink-0 text-gold-500" />
-                        <span>{branch.addressLines.join(", ")}</span>
-                      </p>
-                      {branch.hours ? (
-                        <p className="mt-2 flex items-center gap-2.5 text-sm text-silver-400">
-                          <ClockIcon className="size-4 shrink-0 text-gold-500" />
-                          {branch.hours}
+                  {/*
+                    A live map rather than a link that only proves an address
+                    exists. Google's `output=embed` endpoint needs no API key,
+                    so there is no billing account or rotating key that can
+                    silently break this.
+                  */}
+                  <iframe
+                    src={branch.mapEmbedUrl}
+                    title={`Map showing the ${branch.name} branch`}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    /*
+                      Google serves this tile set light-only, and a sheet of
+                      white in the middle of a dark page is the brightest thing
+                      on screen by a wide margin. Inverting and rotating the
+                      hue a half turn is the standard way to darken a map you
+                      do not control: land and water swap to dark values while
+                      the label text stays legible. Hovering restores the
+                      original, for anyone who wants the familiar rendering.
+                    */
+                    className="h-52 w-full border-0 invert-[0.92] brightness-[0.95] contrast-[0.92] saturate-[0.85] transition-[filter] duration-500 hue-rotate-180 hover:invert-0 hover:hue-rotate-0"
+                  />
+
+                  <div className="border-t border-hairline p-6 sm:p-7">
+                    <div className="flex flex-wrap items-start justify-between gap-4">
+                      <div className="min-w-0">
+                        <h4 className="font-display text-lg font-semibold tracking-tight text-text">
+                          {branch.name}
+                        </h4>
+                        <p className="mt-2.5 flex gap-2.5 text-sm leading-relaxed text-muted">
+                          <MapPinIcon className="mt-0.5 size-4 shrink-0 text-amber-500" />
+                          <span>{address}</span>
                         </p>
-                      ) : null}
+                        {hours ? (
+                          <p className="mt-2 flex items-center gap-2.5 text-sm text-muted">
+                            <ClockIcon className="size-4 shrink-0 text-amber-500" />
+                            {hours}
+                          </p>
+                        ) : null}
+                      </div>
+                      <OpenStatus hours={branch.hours} />
                     </div>
-                    <Cta
-                      href={branch.mapsUrl}
-                      variant="secondary"
-                      className="shrink-0"
-                      aria-label={`Get directions to the ${branch.name} branch`}
-                    >
-                      Directions
-                    </Cta>
+
+                    <div className="mt-6 flex flex-wrap gap-2.5">
+                      <Cta
+                        href={branch.mapsUrl}
+                        variant="secondary"
+                        aria-label={`Get directions to the ${branch.name} branch`}
+                      >
+                        Directions
+                      </Cta>
+                      <CopyButton
+                        value={`${branch.name} — ${address}`}
+                        label={`${branch.name} address`}
+                      />
+                    </div>
                   </div>
-                </li>
-              ))}
-            </ul>
+                </div>
+              );
+            })}
           </div>
         </Reveal>
       </div>

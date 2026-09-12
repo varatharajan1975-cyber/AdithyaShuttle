@@ -35,6 +35,14 @@ const nextConfig: NextConfig = {
     contentSecurityPolicy:
       "default-src 'self'; script-src 'none'; sandbox; style-src 'unsafe-inline';",
     formats: ["image/avif", "image/webp"],
+
+    /**
+     * Next.js 16 narrowed the default to `[75]`, and any other value is
+     * refused at request time. 82 is here for the hero photograph only: it is
+     * the LCP element and a full-bleed dark interior, where 75 shows visible
+     * banding in the floodlight gradients. Everything else uses the default.
+     */
+    qualities: [75, 82],
   },
 
   async headers() {

@@ -9,49 +9,88 @@ export function Tournaments() {
     <Section
       id="tournaments"
       eyebrow="Tournaments"
+      split
       title={
         <>
-          Play the <span className="text-gold-gradient">competitive</span> game
+          Play the{" "}
+          <span className="accent-word text-amber-300">competitive</span> game
         </>
       }
       intro="Graded draws that put you against players at your own level — not a random bracket where the first round decides everything."
     >
-      <div className="grid gap-4 md:grid-cols-3">
-        {TOURNAMENT_FORMATS.map((format, index) => (
-          <Reveal key={format.title} delay={index * 80}>
-            <article className="surface-card group h-full rounded-2xl p-7 transition-colors duration-300 hover:border-gold-500/40">
-              <span className="inline-flex size-11 items-center justify-center rounded-xl border border-gold-500/25 bg-gold-500/10 text-gold-300">
-                <TrophyIcon className="size-5" />
-              </span>
-              <h3 className="mt-5 font-display text-lg font-bold text-silver-100">
-                {format.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-silver-400">
-                {format.body}
-              </p>
-            </article>
-          </Reveal>
-        ))}
+      {/*
+        Columns divided by vertical hairlines instead of three bordered cards.
+        The formats are variations on one idea, and a shared rule says that;
+        three separate boxes would say they are three unrelated things.
+      */}
+      <div className="grid border-t border-hairline lg:grid-cols-3">
+        {TOURNAMENT_FORMATS.map((format, index) => {
+          const isFirst = index === 0;
+          const isLast = index === TOURNAMENT_FORMATS.length - 1;
+
+          return (
+            /*
+              The dividers live on the Reveal wrapper, because that — not the
+              <article> inside it — is the actual grid child. Hanging them off
+              `first:`/`last:` on the article silently matched every column,
+              since each article is an only child of its own wrapper, and the
+              rules disappeared entirely.
+            */
+            <Reveal
+              key={format.title}
+              delay={index * 80}
+              className={`h-full border-b border-hairline lg:border-b-0 ${
+                isLast ? "" : "lg:border-r lg:border-hairline"
+              }`}
+            >
+              <article
+                className={`flex h-full flex-col py-8 lg:py-10 ${
+                  isFirst ? "lg:pr-10" : isLast ? "lg:pl-10" : "lg:px-10"
+                }`}
+              >
+                <span
+                  aria-hidden="true"
+                  className="inline-flex size-10 items-center justify-center rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-300"
+                >
+                  <TrophyIcon className="size-[1.1rem]" />
+                </span>
+                <h3 className="mt-6 font-display text-xl font-semibold tracking-tight text-text">
+                  {format.title}
+                </h3>
+                <p className="mt-3 text-base leading-relaxed text-muted">
+                  {format.body}
+                </p>
+              </article>
+            </Reveal>
+          );
+        })}
       </div>
 
       <Reveal delay={140}>
-        <div className="surface-card mt-6 flex flex-col items-start gap-5 rounded-2xl p-7 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-          <div className="flex items-start gap-4">
-            <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl border border-gold-500/25 bg-gold-500/10 text-gold-300">
+        <div className="panel mt-12 flex flex-col items-start gap-6 rounded-2xl p-8 sm:flex-row sm:items-center sm:justify-between sm:p-10">
+          <div className="flex items-start gap-5">
+            <span
+              aria-hidden="true"
+              className="inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-300"
+            >
               <InstagramIcon className="size-5" />
             </span>
             <div>
-              <h3 className="font-display text-lg font-bold text-silver-100">
+              <h3 className="font-display text-xl font-semibold tracking-tight text-text">
                 Fixtures go up on Instagram
               </h3>
-              <p className="mt-1.5 max-w-md text-sm leading-relaxed text-silver-400">
+              <p className="mt-2 max-w-md text-sm leading-relaxed text-muted">
                 Draws, entry details and results are posted there first. Follow{" "}
                 {CONTACT.instagramHandle} so you don&rsquo;t miss an entry
                 deadline.
               </p>
             </div>
           </div>
-          <Cta href={CONTACT.instagram} className="w-full shrink-0 sm:w-auto">
+          <Cta
+            href={CONTACT.instagram}
+            size="lg"
+            className="w-full shrink-0 sm:w-auto"
+          >
             Follow on Instagram
           </Cta>
         </div>

@@ -13,12 +13,12 @@ export function SiteFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-line bg-ink-2/60">
-      <div className="mx-auto w-full max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <footer className="relative overflow-hidden border-t border-hairline bg-surface">
+      <div className="relative mx-auto w-full max-w-7xl px-5 pt-20 sm:px-8 sm:pt-24">
+        <div className="grid gap-12 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div>
-            <BrandMark />
-            <p className="mt-5 max-w-xs text-sm leading-relaxed text-silver-400">
+            <BrandMark size="lg" />
+            <p className="mt-6 max-w-xs text-sm leading-relaxed text-muted">
               Badminton courts and coaching in Thirumullaivoyal and Madhavaram,
               Chennai.
             </p>
@@ -26,7 +26,7 @@ export function SiteFooter() {
               href={CONTACT.instagram}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-2.5 rounded-full border border-line-2 px-4 py-2.5 text-sm font-medium text-silver-300 transition-colors hover:border-gold-500/60 hover:text-gold-200"
+              className="mt-7 inline-flex items-center gap-2.5 rounded-full border border-hairline px-4 py-2.5 text-sm font-medium text-muted transition-colors hover:border-amber-400/60 hover:text-amber-200"
             >
               <InstagramIcon className="size-4" />
               {CONTACT.instagramHandle}
@@ -58,7 +58,17 @@ export function SiteFooter() {
           </FooterColumn>
         </div>
 
-        <div className="mt-14 flex flex-col gap-3 border-t border-line pt-8 text-xs text-silver-500 sm:flex-row sm:items-center sm:justify-between">
+        {/* Oversized wordmark, clipped by the section edge. Purely typographic
+            texture — hidden from assistive technology because the lockup
+            above already names the academy. */}
+        <p
+          aria-hidden="true"
+          className="mt-16 -mb-[0.18em] translate-y-[0.12em] text-center font-display text-[19vw] leading-[0.8] font-semibold tracking-[-0.045em] text-text/[0.045] select-none"
+        >
+          Adithya
+        </p>
+
+        <div className="flex flex-col gap-3 border-t border-hairline pt-8 pb-[calc(2rem+var(--bookbar-height))] text-xs text-faint sm:flex-row sm:items-center sm:justify-between sm:pb-10">
           <p>
             &copy; {year} {BRAND.legalName}. All rights reserved.
           </p>
@@ -78,7 +88,7 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <h2 className="text-[0.7rem] font-semibold tracking-[0.2em] text-gold-400 uppercase">
+      <h2 className="text-[0.68rem] font-semibold tracking-[0.2em] text-amber-400 uppercase">
         {title}
       </h2>
       <ul className="mt-5 space-y-3">{children}</ul>
@@ -99,10 +109,8 @@ function FooterLink({
     <li>
       <a
         href={href}
-        {...(external
-          ? { target: "_blank", rel: "noopener noreferrer" }
-          : {})}
-        className="text-sm text-silver-400 transition-colors hover:text-gold-200"
+        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        className="text-sm text-muted transition-colors hover:text-amber-200"
       >
         {children}
       </a>

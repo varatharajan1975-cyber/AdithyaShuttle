@@ -1,74 +1,82 @@
 @import "tailwindcss";
 
 /* -------------------------------------------------------------------------- */
-/* Design tokens                                                              */
+/* Design tokens — "Floodlit"                                                 */
 /*                                                                            */
-/* The palette is taken from the academy's shield logo: saturated gold and     */
-/* brushed silver on near-black. The site is deliberately dark-only — a light  */
-/* variant would fight the brand mark, so `color-scheme` is pinned to dark.    */
+/* One accent, used with discipline. Amber is the academy's brand colour and   */
+/* the colour of the hall's floodlights, so it carries every interactive and   */
+/* brand cue. Everything else is a warm neutral.                               */
+/*                                                                            */
+/* The green in this design comes from the photographs, not from a token —     */
+/* real court green against amber light is the colour contrast the page is     */
+/* built on, which is why photography leads every major section.               */
 /* -------------------------------------------------------------------------- */
 
 @theme {
-  /* Surfaces, darkest to lightest */
-  --color-ink: #07070a;
-  --color-ink-2: #0b0b11;
-  --color-ink-3: #101018;
-  --color-ink-4: #17171f;
-  --color-line: #23232f;
-  --color-line-2: #2e2e3d;
+  /* Surfaces — warm-neutral darks, spaced far enough apart to read as depth. */
+  --color-canvas: #0a0908;
+  --color-surface: #121110;
+  --color-surface-2: #1a1917;
+  --color-surface-3: #232220;
+  --color-surface-4: #2e2c29;
 
-  /* Gold — primary accent */
-  --color-gold-100: #fdf3d2;
-  --color-gold-200: #f9e5a0;
-  --color-gold-300: #f2cb5b;
-  --color-gold-400: #e8b22e;
-  --color-gold-500: #d4971b;
-  --color-gold-600: #ab7714;
-  --color-gold-700: #7d560f;
+  /* Hairlines. Alpha rather than solid so they sit correctly on photographs. */
+  --color-hairline: rgba(255, 252, 245, 0.08);
+  --color-hairline-strong: rgba(255, 252, 245, 0.16);
 
-  /* Silver — secondary accent, used for the chrome-y headline treatment */
-  --color-silver-100: #f4f5f7;
-  --color-silver-200: #dcdfe5;
-  --color-silver-300: #b8bdc8;
-  --color-silver-400: #8f95a3;
-  --color-silver-500: #6b7180;
+  /* Text */
+  /* Contrast against --color-canvas / --color-surface, both of which carry
+     body text: 17.98 / 17.04, 7.88 / 7.47, 4.82 / 4.57. `faint` is the tight
+     one — it is used for small labels and captions, so it is tuned to clear
+     WCAG AA (4.5:1) on the lighter of the two surfaces rather than only on
+     the darkest one. */
+  --color-text: #f6f3ee;
+  --color-muted: #a9a29a;
+  --color-faint: #827c74;
+
+  /* Amber — the single accent. */
+  --color-amber-100: #fef4da;
+  --color-amber-200: #fce4a6;
+  --color-amber-300: #f9cf6d;
+  --color-amber-400: #efb134;
+  --color-amber-500: #d29219;
+  --color-amber-600: #a37013;
+  --color-amber-700: #6f4c0d;
+
+  /* Live status. Functional only — never used as a design accent. */
+  --color-live: #4ade80;
 
   /* Typography */
-  --font-display: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-inter), ui-sans-serif,
+    system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
 
   /* Motion */
-  --animate-float: float 9s ease-in-out infinite;
-  --animate-drift: drift 24s linear infinite;
-  --animate-shimmer: shimmer 6s ease-in-out infinite;
+  --animate-marquee: marquee 42s linear infinite;
+  --animate-pulse-dot: pulse-dot 2.4s ease-in-out infinite;
+
+  /* Easing shared by every transition on the site. */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-18px) rotate(6deg);
-  }
-}
-
-@keyframes drift {
+@keyframes marquee {
   from {
-    background-position: 0 0;
+    transform: translateX(0);
   }
   to {
-    background-position: 120px 120px;
+    /* The track renders its content twice; -50% lands exactly on the seam. */
+    transform: translateX(-50%);
   }
 }
 
-@keyframes shimmer {
+@keyframes pulse-dot {
   0%,
   100% {
-    opacity: 0.35;
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.55);
   }
   50% {
-    opacity: 0.75;
+    box-shadow: 0 0 0 5px rgba(74, 222, 128, 0);
   }
 }
 
@@ -79,12 +87,14 @@
 :root {
   color-scheme: dark;
   --header-height: 4.5rem;
+  /* Height of the sticky mobile booking bar, so the page can reserve space
+     for it and nothing ends up permanently hidden behind it. */
+  --bookbar-height: 4.75rem;
 }
 
 html {
   scroll-behavior: smooth;
-  /* Keep anchored sections clear of the sticky header. */
-  scroll-padding-top: calc(var(--header-height) + 1.5rem);
+  scroll-padding-top: calc(var(--header-height) + 2rem);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -103,40 +113,44 @@ html {
 }
 
 body {
-  background-color: var(--color-ink);
-  color: var(--color-silver-100);
+  background-color: var(--color-canvas);
+  color: var(--color-text);
   font-family: var(--font-sans);
-  /* Stops iOS Safari from inflating text in landscape. */
   -webkit-text-size-adjust: 100%;
+  letter-spacing: -0.005em;
 }
 
 ::selection {
-  background-color: var(--color-gold-400);
-  color: var(--color-ink);
+  background-color: var(--color-amber-400);
+  color: var(--color-canvas);
 }
 
-/* A single, consistent focus ring for every interactive element. Never
-   removed — keyboard users need it and it is a WCAG requirement. */
 :where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
-  outline: 2px solid var(--color-gold-300);
+  outline: 2px solid var(--color-amber-300);
   outline-offset: 3px;
-  border-radius: 0.25rem;
+  border-radius: 0.375rem;
+}
+
+/* Headings carry the display face and a tighter optical tracking by default,
+   so no component has to remember to set both. */
+:where(h1, h2, h3, h4) {
+  font-family: var(--font-display);
+  letter-spacing: -0.025em;
 }
 
 /* -------------------------------------------------------------------------- */
 /* Scroll reveal                                                              */
 /*                                                                            */
-/* Elements start offset and fade in when scrolled into view. The <noscript>   */
-/* override in layout.tsx guarantees content is visible if JS never runs, so   */
-/* this can never hide content from a crawler or a user on a failed bundle.    */
+/* The <noscript> override in layout.tsx forces these visible, so a failed     */
+/* bundle or a crawler that never runs scripts still sees the full page.       */
 /* -------------------------------------------------------------------------- */
 
 [data-reveal] {
   opacity: 0;
-  transform: translateY(22px);
+  transform: translateY(18px);
   transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.8s var(--ease-out-soft),
+    transform 0.8s var(--ease-out-soft);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
@@ -156,50 +170,83 @@ body {
 /* Utilities                                                                  */
 /* -------------------------------------------------------------------------- */
 
-/** Brushed-gold text, matching the logo's metallic fill. */
-@utility text-gold-gradient {
-  background-image: linear-gradient(
-    100deg,
-    var(--color-gold-200) 0%,
-    var(--color-gold-400) 28%,
-    var(--color-gold-100) 50%,
-    var(--color-gold-400) 72%,
-    var(--color-gold-300) 100%
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
+/**
+ * The serif-italic accent word used inside display headings.
+ *
+ * Optical corrections, not decoration: Instrument Serif runs noticeably
+ * smaller on the body than Bricolage Grotesque at the same font-size, and its
+ * italic needs a little room on the right before the next upright word.
+ */
+@utility accent-word {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.08em;
+  letter-spacing: -0.015em;
+  padding-right: 0.06em;
 }
 
-/** Chrome/silver text, matching the logo's "AS" monogram. */
-@utility text-silver-gradient {
-  background-image: linear-gradient(
-    100deg,
-    var(--color-silver-300) 0%,
-    var(--color-silver-100) 30%,
-    var(--color-silver-200) 55%,
-    var(--color-silver-400) 100%
-  );
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
-/** Standard raised card surface. */
-@utility surface-card {
-  background-image: linear-gradient(
-    160deg,
-    var(--color-ink-3) 0%,
-    var(--color-ink-2) 100%
-  );
-  border: 1px solid var(--color-line);
-}
-
-/** Faint badminton-court line grid, used behind hero and CTA bands. */
-@utility court-grid {
+/**
+ * Badminton court markings. Used at low opacity behind dark bands to give
+ * flat areas some texture without introducing another colour.
+ */
+@utility court-lines {
   background-image:
-    linear-gradient(to right, rgba(232, 178, 46, 0.07) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(232, 178, 46, 0.07) 1px, transparent 1px);
-  background-size: 60px 60px;
+    linear-gradient(to right, rgba(239, 177, 52, 0.16) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(239, 177, 52, 0.16) 1px, transparent 1px);
+  background-size: 72px 72px;
 }
 
+/**
+ * Photographic scrim. Every photo that carries text sits under one of these,
+ * so the overlay keeps its contrast ratio regardless of what the frame shows.
+ */
+@utility photo-scrim {
+  background-image: linear-gradient(
+    to top,
+    var(--color-canvas) 0%,
+    rgba(10, 9, 8, 0.86) 26%,
+    rgba(10, 9, 8, 0.5) 60%,
+    rgba(10, 9, 8, 0.38) 100%
+  );
+}
+
+/** Hairline-bordered panel. Replaces the old gradient-filled card. */
+@utility panel {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-hairline);
+}
+
+/**
+ * Amber edge-glow for the primary button. A single shadow layer rather than
+ * the stacked gradients the old build used, which muddied at small sizes.
+ */
+@utility glow-amber {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.22) inset,
+    0 12px 34px -14px rgba(239, 177, 52, 0.75);
+}
+
+/**
+ * Horizontal fade for the marquee, so items dissolve at the edges of the
+ * viewport instead of being cut off mid-glyph.
+ */
+@utility edge-fade-x {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 6%,
+    black 94%,
+    transparent
+  );
+}
+
+/** Hides the scrollbar on horizontal rails that have their own affordances. */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

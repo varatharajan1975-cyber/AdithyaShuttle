@@ -22,9 +22,9 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          backgroundColor: "#07070a",
+          backgroundColor: "#0a0908",
           backgroundImage:
-            "radial-gradient(circle at 22% 18%, rgba(212,151,27,0.30), transparent 55%), radial-gradient(circle at 88% 92%, rgba(232,178,46,0.16), transparent 50%)",
+            "radial-gradient(circle at 22% 18%, rgba(239,177,52,0.28), transparent 55%), radial-gradient(circle at 88% 92%, rgba(239,177,52,0.14), transparent 50%)",
         }}
       >
         <div
@@ -34,11 +34,11 @@ export default function OpengraphImage() {
             gap: "18px",
             fontSize: 22,
             letterSpacing: "0.28em",
-            color: "#e8b22e",
+            color: "#efb134",
             fontWeight: 700,
           }}
         >
-          <div style={{ width: 56, height: 3, backgroundColor: "#d4971b" }} />
+          <div style={{ width: 56, height: 3, backgroundColor: "#d29219" }} />
           ADITHYA SPORTS ACADEMY
         </div>
 
@@ -53,15 +53,15 @@ export default function OpengraphImage() {
             letterSpacing: "-0.03em",
           }}
         >
-          <span style={{ color: "#f4f5f7" }}>Own every</span>
-          <span style={{ color: "#f2cb5b" }}>rally.</span>
+          <span style={{ color: "#f6f3ee" }}>Own every</span>
+          <span style={{ color: "#f9cf6d" }}>rally.</span>
         </div>
 
         <div
           style={{
             marginTop: 44,
             fontSize: 30,
-            color: "#b8bdc8",
+            color: "#a9a29a",
             maxWidth: 860,
             lineHeight: 1.4,
           }}
@@ -75,7 +75,7 @@ export default function OpengraphImage() {
             display: "flex",
             marginTop: "auto",
             fontSize: 24,
-            color: "#8f95a3",
+            color: "#6f6a63",
           }}
         >
           Book on Turf Town &amp; Playo

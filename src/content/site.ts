@@ -24,6 +24,20 @@ export type BookingLink = {
   href: string;
 };
 
+/**
+ * Opening hours as 24-hour "HH:MM" strings.
+ *
+ * Stored structured rather than as display text so one value can drive three
+ * things at once: the printed hours, the live open/closed indicator, and the
+ * `openingHoursSpecification` in the schema.org markup. Previously the markup
+ * hard-coded 07:00–22:00 while the copy was free text, which meant the two
+ * could silently drift apart.
+ */
+export type OpeningHours = {
+  opens: string;
+  closes: string;
+};
+
 export type Branch = {
   slug: string;
   /** Short name used in nav, headings and booking buttons. */
@@ -32,9 +46,13 @@ export type Branch = {
   area: string;
   addressLines: string[];
   /** `null` until the academy confirms published opening hours. */
-  hours: string | null;
+  hours: OpeningHours | null;
   /** Google Maps directions link. */
   mapsUrl: string;
+  /** Keyless Google Maps embed, used for the inline map on the contact panel. */
+  mapEmbedUrl: string;
+  /** Photograph of this branch, used as the panel background. */
+  image: string;
   amenities: string[];
   booking: BookingLink[];
 };
@@ -52,6 +70,8 @@ export type GalleryItem = {
   alt: string;
   /** Controls which placeholder illustration is drawn when `src` is null. */
   art: "court" | "shuttle" | "net" | "rally";
+  /** Which branch the photo was taken at, used by the gallery filter. */
+  branch: "thirumullaivoyal" | "madhavaram";
   /**
    * Renders the tile at 2x2 on large screens. Exactly one item should set
    * this: with six tiles in a three-column grid it tiles perfectly, and any
@@ -79,6 +99,8 @@ export const BRAND = {
    * The bundled /logo.svg is an interim mark so the site is never broken.
    */
   logo: "/logo.svg",
+  /** Lead photograph, used full-bleed behind the hero. */
+  heroImage: "/gallery/madhavaram-main-court.jpg",
   description:
     "Adithya Sports Academy runs professional badminton courts and structured coaching in Thirumullaivoyal and Madhavaram, Chennai. Book a court by the hour on Turf Town or Playo, or join an academy batch.",
 } as const;
@@ -141,6 +163,19 @@ export const PLATFORM_LABEL: Record<BookingPlatform, string> = {
 const mapsLink = (query: string) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 
+/**
+ * Google Maps' `output=embed` endpoint renders a full interactive map without
+ * an API key or a billing account, so the inline maps cannot break when a key
+ * rotates or a quota is hit.
+ */
+const mapEmbed = (query: string) =>
+  `https://maps.google.com/maps?q=${encodeURIComponent(query)}&z=15&output=embed`;
+
+const THIRUMULLAIVOYAL_QUERY =
+  "Adithya Badminton Academy, Brindhavan Street, Thendral Nagar, Thirumullaivoyal, Chennai";
+const MADHAVARAM_QUERY =
+  "Adithya Sports Academy, Perumal Koil Street, Venugopal Nagar, Madhavaram, Chennai 600060";
+
 export const BRANCHES: Branch[] = [
   {
     slug: "thirumullaivoyal",
@@ -153,9 +188,9 @@ export const BRANCHES: Branch[] = [
     ],
     // TODO(owner): confirm opening hours for this branch.
     hours: null,
-    mapsUrl: mapsLink(
-      "Adithya Badminton Academy, Brindhavan Street, Thendral Nagar, Thirumullaivoyal, Chennai",
-    ),
+    mapsUrl: mapsLink(THIRUMULLAIVOYAL_QUERY),
+    mapEmbedUrl: mapEmbed(THIRUMULLAIVOYAL_QUERY),
+    image: "/gallery/thirumullaivoyal-show-court.jpg",
     amenities: [
       "Free parking",
       "Changing rooms",
@@ -179,10 +214,10 @@ export const BRANCHES: Branch[] = [
       "Venugopal Nagar, Madhavaram",
       "Chennai, Tamil Nadu 600060",
     ],
-    hours: "7:00 AM – 10:00 PM, daily",
-    mapsUrl: mapsLink(
-      "Adithya Sports Academy, Perumal Koil Street, Venugopal Nagar, Madhavaram, Chennai 600060",
-    ),
+    hours: { opens: "07:00", closes: "22:00" },
+    mapsUrl: mapsLink(MADHAVARAM_QUERY),
+    mapEmbedUrl: mapEmbed(MADHAVARAM_QUERY),
+    image: "/gallery/madhavaram-floodlights.jpg",
     amenities: [
       "Free parking",
       "Changing rooms",
@@ -330,6 +365,24 @@ export const HIGHLIGHTS = [
   },
 ];
 
+/**
+ * Short facts scrolled in the marquee strip under the hero. Every one is
+ * drawn from a fact already stated elsewhere on the page — the strip is
+ * texture and reinforcement, never a place for a new claim.
+ */
+export const MARQUEE_ITEMS = [
+  "Indoor courts",
+  "Thirumullaivoyal",
+  "Free parking",
+  "Madhavaram",
+  "Showers & changing",
+  "Book on Turf Town",
+  "Coaching for all levels",
+  "Book on Playo",
+  "Racket & shoe rental",
+  "Tournaments & group events",
+] as const;
+
 /* -------------------------------------------------------------------------- */
 /* Gallery                                                                     */
 /* -------------------------------------------------------------------------- */
@@ -349,34 +402,82 @@ export const GALLERY: GalleryItem[] = [
     src: "/gallery/madhavaram-main-court.jpg",
     alt: "Main badminton court at the Madhavaram branch",
     art: "court",
+    branch: "madhavaram",
     featured: true,
   },
   {
     src: "/gallery/thirumullaivoyal-show-court.jpg",
     alt: "Badminton court at the Thirumullaivoyal branch",
     art: "court",
+    branch: "thirumullaivoyal",
   },
   {
     src: "/gallery/madhavaram-net.jpg",
     alt: "Net and service lines on the Madhavaram court",
     art: "net",
+    branch: "madhavaram",
   },
   {
     src: "/gallery/thirumullaivoyal-courts.jpg",
     alt: "Full court view at the Thirumullaivoyal branch",
     art: "court",
+    branch: "thirumullaivoyal",
   },
   {
     src: "/gallery/madhavaram-floodlights.jpg",
     alt: "Madhavaram court under floodlights",
     art: "rally",
+    branch: "madhavaram",
   },
   {
     src: "/gallery/thirumullaivoyal-surface.jpg",
     alt: "Court surface and markings at Thirumullaivoyal",
     art: "court",
+    branch: "thirumullaivoyal",
   },
 ];
+
+/* -------------------------------------------------------------------------- */
+/* FAQ                                                                         */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Every answer below restates a fact that already appears elsewhere on this
+ * page — court rules, amenities, booking platforms, branch hours. Nothing here
+ * is new information, which is what keeps the FAQPage structured data honest.
+ */
+export const FAQS = [
+  {
+    question: "How do I book a court?",
+    answer:
+      "Courts are booked through Turf Town or Playo, not on this site. Both show live slot availability, confirm instantly and take UPI. Thirumullaivoyal is listed on Turf Town; Madhavaram is on both Turf Town and Playo.",
+  },
+  {
+    question: "What should I wear on court?",
+    answer:
+      "Non-marking shoes are mandatory and barefoot play is not permitted. If you are renting shoes, bring your own socks.",
+  },
+  {
+    question: "Can I turn up without a racket?",
+    answer:
+      "Yes, at Madhavaram — racket and shoe rental is available there. Bring socks if you plan to rent shoes.",
+  },
+  {
+    question: "How many people can play on one booking?",
+    answer:
+      "Up to four players per court, per booking — singles or doubles.",
+  },
+  {
+    question: "Is there parking?",
+    answer:
+      "Yes. Both branches have free parking on site, along with changing rooms. Madhavaram also has showers, drinking water and a first-aid kit.",
+  },
+  {
+    question: "Do you coach complete beginners?",
+    answer:
+      "Yes. The Foundation programme starts from grip, stance and footwork, and players are placed by level rather than by age alone. Batch timings and fees vary by branch and season, so ask us directly.",
+  },
+] as const;
 
 /* -------------------------------------------------------------------------- */
 /* Navigation                                                                  */
@@ -385,7 +486,7 @@ export const GALLERY: GalleryItem[] = [
 export const NAV_LINKS = [
   { label: "Training", href: "#training" },
   { label: "Branches", href: "#branches" },
-  { label: "Tournaments", href: "#tournaments" },
+  { label: "Booking", href: "#booking" },
   { label: "Gallery", href: "#gallery" },
   { label: "Contact", href: "#contact" },
 ] as const;

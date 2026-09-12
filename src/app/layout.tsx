@@ -1,12 +1,29 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Sora } from "next/font/google";
+import { Bricolage_Grotesque, Inter, Instrument_Serif } from "next/font/google";
 import { BRAND, SITE_URL } from "@/content/site";
 import { StructuredData } from "@/components/structured-data";
 import "./globals.css";
 
-const sora = Sora({
-  variable: "--font-sora",
+/**
+ * Three faces, each with one job.
+ *
+ * Bricolage Grotesque carries the headings: it has real character at display
+ * sizes, where the previous geometric sans went generic. Instrument Serif is
+ * loaded in italic only and used for a single accent word per heading — that
+ * one contrast does more for the page than any amount of gradient ever did.
+ * Inter stays for body copy, where neutrality is the point.
+ */
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const instrument = Instrument_Serif({
+  variable: "--font-instrument",
+  subsets: ["latin"],
+  weight: "400",
+  style: "italic",
   display: "swap",
 });
 
@@ -56,7 +73,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#07070a",
+  themeColor: "#0a0908",
   colorScheme: "dark",
 };
 
@@ -64,7 +81,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en-IN"
-      className={`${sora.variable} ${inter.variable} h-full antialiased`}
+      className={`${bricolage.variable} ${instrument.variable} ${inter.variable} h-full antialiased`}
     >
       <head>
         {/*
@@ -76,10 +93,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
         </noscript>
       </head>
-      <body className="flex min-h-full flex-col bg-ink">
+      <body className="flex min-h-full flex-col bg-canvas">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[70] focus:rounded-full focus:bg-gold-400 focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-ink"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[70] focus:rounded-full focus:bg-amber-400 focus:px-5 focus:py-3 focus:text-sm focus:font-semibold focus:text-canvas"
         >
           Skip to content
         </a>

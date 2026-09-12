@@ -1,8 +1,8 @@
 import type { AnchorHTMLAttributes, ReactNode } from "react";
-import { ExternalIcon } from "./icons";
+import { ArrowUpRightIcon } from "./icons";
 
-type Variant = "primary" | "secondary" | "ghost";
-type Size = "md" | "lg";
+type Variant = "primary" | "secondary" | "quiet" | "ghost";
+type Size = "sm" | "md" | "lg";
 
 type CtaProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   href: string;
@@ -15,16 +15,27 @@ type CtaProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   hideExternalIcon?: boolean;
 };
 
+/**
+ * Solid amber, no gradient.
+ *
+ * The previous build ran a three-stop gradient across every button, which
+ * banded at small sizes and dropped the contrast of the dark label over the
+ * lighter stops. A flat fill holds its contrast ratio at every size, and the
+ * depth comes from one inset highlight plus a cast glow instead.
+ */
 const VARIANTS: Record<Variant, string> = {
   primary:
-    "rounded-full bg-gradient-to-br from-gold-200 via-gold-400 to-gold-600 font-semibold text-ink shadow-[0_10px_30px_-12px_rgba(232,178,46,0.7)] hover:from-gold-100 hover:via-gold-300 hover:to-gold-500 hover:shadow-[0_14px_38px_-12px_rgba(232,178,46,0.85)]",
+    "glow-amber rounded-full bg-amber-400 font-semibold text-canvas hover:bg-amber-300",
   secondary:
-    "rounded-full border border-line-2 bg-ink-3/70 font-medium text-silver-100 backdrop-blur-sm hover:border-gold-500/60 hover:bg-ink-4 hover:text-gold-200",
+    "rounded-full border border-hairline-strong bg-surface-2/80 font-medium text-text backdrop-blur-md hover:border-amber-400/50 hover:bg-surface-3 hover:text-amber-200",
+  quiet:
+    "rounded-full border border-hairline font-medium text-muted hover:border-hairline-strong hover:text-text",
   ghost:
-    "font-medium text-silver-300 underline-offset-4 hover:text-gold-200 hover:underline",
+    "font-medium text-muted underline-offset-4 hover:text-amber-200 hover:underline",
 };
 
 const SIZES: Record<Size, string> = {
+  sm: "px-4 py-2 text-[0.8rem]",
   md: "px-5 py-2.5 text-sm",
   lg: "px-7 py-3.5 text-[0.95rem]",
 };
@@ -53,12 +64,12 @@ export function Cta({
     <a
       href={href}
       {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className={`inline-flex items-center justify-center gap-2 transition-all duration-200 ${VARIANTS[variant]} ${padding} ${className}`}
+      className={`group/cta inline-flex items-center justify-center gap-2 transition-all duration-300 ${VARIANTS[variant]} ${padding} ${className}`}
       {...rest}
     >
       {children}
       {isExternal && !hideExternalIcon ? (
-        <ExternalIcon className="size-4 shrink-0 opacity-70" />
+        <ArrowUpRightIcon className="size-4 shrink-0 opacity-60 transition-transform duration-300 group-hover/cta:translate-x-px group-hover/cta:-translate-y-px" />
       ) : null}
     </a>
   );

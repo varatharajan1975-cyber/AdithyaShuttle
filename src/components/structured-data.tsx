@@ -1,4 +1,4 @@
-import { BRAND, BRANCHES, CONTACT, SITE_URL } from "@/content/site";
+import { BRAND, BRANCHES, CONTACT, FAQS, SITE_URL } from "@/content/site";
 
 /**
  * schema.org markup so Google can show the academy as a local business with
@@ -42,6 +42,8 @@ function buildGraph() {
       name: amenity,
       value: true,
     })),
+    // Driven by the branch's own `hours` rather than a second hard-coded copy
+    // of 07:00–22:00, so the markup can no longer drift from the visible text.
     ...(branch.hours
       ? {
           openingHoursSpecification: {
@@ -55,17 +57,32 @@ function buildGraph() {
               "Saturday",
               "Sunday",
             ],
-            opens: "07:00",
-            closes: "22:00",
+            opens: branch.hours.opens,
+            closes: branch.hours.closes,
           },
         }
       : {}),
     ...(CONTACT.phone ? { telephone: CONTACT.phone } : {}),
   }));
 
+  /**
+   * Every answer restates something already visible on the page, which is
+   * what Google's structured-data policy requires of a FAQPage — markup that
+   * answers questions the page itself does not answer is a manual-action risk.
+   */
+  const faqPage = {
+    "@type": "FAQPage",
+    "@id": `${SITE_URL}/#faq`,
+    mainEntity: FAQS.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
+    })),
+  };
+
   return {
     "@context": "https://schema.org",
-    "@graph": [organisation, ...locations],
+    "@graph": [organisation, ...locations, faqPage],
   };
 }
 
