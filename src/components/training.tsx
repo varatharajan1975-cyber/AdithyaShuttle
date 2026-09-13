@@ -2,7 +2,7 @@ import { Cta } from "./ui/cta";
 import { Reveal } from "./ui/reveal";
 import { Section } from "./ui/section";
 import { ArrowUpRightIcon } from "./ui/icons";
-import { CONTACT, PROGRAMMES } from "@/content/site";
+import { CONTACT, PRIMARY_PHONE, PROGRAMMES } from "@/content/site";
 
 export function Training() {
   /**
@@ -10,8 +10,10 @@ export function Training() {
    * and guessing them would send people to the wrong court at the wrong time.
    * The enquiry CTA points at whichever channel is actually configured.
    */
-  const enquiryHref = CONTACT.phone ? `tel:${CONTACT.phone}` : CONTACT.instagram;
-  const enquiryLabel = CONTACT.phone
+  const enquiryHref = PRIMARY_PHONE
+    ? `tel:${PRIMARY_PHONE}`
+    : CONTACT.instagram;
+  const enquiryLabel = PRIMARY_PHONE
     ? "Call about batches"
     : "Ask us on Instagram";
 

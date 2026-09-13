@@ -122,8 +122,15 @@ export const SITE_URL = (
 /* -------------------------------------------------------------------------- */
 
 type Contact = {
-  /** E.164 format, e.g. "+919876543210", or null while unknown. */
-  phone: string | null;
+  /**
+   * Every published number, in E.164 format. Order matters: the first is
+   * treated as the primary line and is what the enquiry CTAs dial.
+   *
+   * An array rather than a single field because the academy publishes two
+   * numbers, and the UI should offer both rather than silently pick one.
+   */
+  phones: string[];
+  /** Only set this if WhatsApp is on a *different* number to `phones[0]`. */
   whatsapp: string | null;
   email: string | null;
   instagram: string;
@@ -131,15 +138,30 @@ type Contact = {
 };
 
 export const CONTACT: Contact = {
-  // TODO(owner): add the academy phone number in E.164, e.g. "+919876543210".
-  phone: null,
-  // TODO(owner): add a WhatsApp number in E.164 if it differs from `phone`.
+  phones: ["+919150276222", "+919150276999"],
+  // TODO(owner): set this only if WhatsApp is on a different number. While it
+  // is null the WhatsApp link uses the first number above — confirm that
+  // number actually has WhatsApp, or the link goes nowhere useful.
   whatsapp: null,
   // TODO(owner): add a public enquiries email address.
   email: null,
   instagram: "https://www.instagram.com/adithya_sportsacademy",
   instagramHandle: "@adithya_sportsacademy",
 };
+
+/** The number the enquiry CTAs dial, or null if none is published. */
+export const PRIMARY_PHONE: string | null = CONTACT.phones[0] ?? null;
+
+/**
+ * Renders an E.164 number the way it is written locally: "+919150276222"
+ * becomes "+91 91502 76222". Display only — every `tel:` and `wa.me` href is
+ * built from the raw E.164 value, which is the only form those schemes accept
+ * reliably.
+ */
+export function formatPhone(e164: string): string {
+  const indian = /^\+91(\d{5})(\d{5})$/.exec(e164);
+  return indian ? `+91 ${indian[1]} ${indian[2]}` : e164;
+}
 
 /* -------------------------------------------------------------------------- */
 /* Booking                                                                     */

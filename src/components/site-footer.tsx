@@ -1,10 +1,11 @@
 import { BrandMark } from "./brand-mark";
-import { InstagramIcon } from "./ui/icons";
+import { InstagramIcon, PhoneIcon } from "./ui/icons";
 import {
   ALL_BOOKING_LINKS,
   BRANCHES,
   BRAND,
   CONTACT,
+  formatPhone,
   NAV_LINKS,
   PLATFORM_LABEL,
 } from "@/content/site";
@@ -22,6 +23,22 @@ export function SiteFooter() {
               Badminton courts and coaching in Thirumullaivoyal and Madhavaram,
               Chennai.
             </p>
+            {CONTACT.phones.length > 0 ? (
+              <ul className="mt-6 space-y-2">
+                {CONTACT.phones.map((phone) => (
+                  <li key={phone}>
+                    <a
+                      href={`tel:${phone}`}
+                      className="inline-flex items-center gap-2.5 font-display text-lg font-semibold tracking-tight text-text transition-colors hover:text-amber-200"
+                    >
+                      <PhoneIcon className="size-4 shrink-0 text-amber-500" />
+                      {formatPhone(phone)}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+
             <a
               href={CONTACT.instagram}
               target="_blank"

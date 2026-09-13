@@ -18,7 +18,9 @@ function buildGraph() {
     description: BRAND.description,
     logo: `${SITE_URL}${BRAND.logo}`,
     sameAs: [CONTACT.instagram],
-    ...(CONTACT.phone ? { telephone: CONTACT.phone } : {}),
+    // schema.org accepts a repeated `telephone`, so both published lines are
+    // emitted rather than only the primary one.
+    ...(CONTACT.phones.length > 0 ? { telephone: CONTACT.phones } : {}),
     ...(CONTACT.email ? { email: CONTACT.email } : {}),
   };
 
@@ -62,7 +64,7 @@ function buildGraph() {
           },
         }
       : {}),
-    ...(CONTACT.phone ? { telephone: CONTACT.phone } : {}),
+    ...(CONTACT.phones.length > 0 ? { telephone: CONTACT.phones } : {}),
   }));
 
   /**

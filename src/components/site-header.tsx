@@ -4,8 +4,15 @@ import { useEffect, useRef, useState } from "react";
 import { BrandMark } from "./brand-mark";
 import { Cta } from "./ui/cta";
 import { OpenStatus } from "./ui/open-status";
-import { CloseIcon, InstagramIcon, MenuIcon } from "./ui/icons";
-import { BRAND, CONTACT, NAV_LINKS, PRIMARY_BOOKING_HREF } from "@/content/site";
+import { CloseIcon, InstagramIcon, MenuIcon, PhoneIcon } from "./ui/icons";
+import {
+  BRAND,
+  CONTACT,
+  formatPhone,
+  NAV_LINKS,
+  PRIMARY_BOOKING_HREF,
+  PRIMARY_PHONE,
+} from "@/content/site";
 import { branchWithHours } from "@/lib/hours";
 
 /** Section ids the scroll-spy watches, derived from the nav itself. */
@@ -118,18 +125,25 @@ export function SiteHeader() {
             : "border-b border-transparent bg-transparent"
         }`}
       >
-        <div className="mx-auto flex h-[var(--header-height)] max-w-7xl items-center justify-between gap-4 px-5 sm:px-8">
-          <a
-            href="#top"
-            className="shrink-0 rounded-lg"
-            aria-label={`${BRAND.name} — back to top`}
-          >
-            <BrandMark />
-          </a>
+        {/*
+          Three columns at `1fr auto 1fr` rather than a flex row, so the logo
+          is centred on the viewport rather than on whatever space the nav and
+          the buttons happen to leave. The outer columns are equal by
+          construction, which keeps the lockup centred at every breakpoint —
+          including on phones, where the left column is an empty spacer
+          balancing the menu button on the right.
 
+          Each child names its own column. `display: none` takes an element out
+          of the grid altogether rather than leaving an empty track, so under
+          auto-placement the hidden nav below `lg` pulled the logo into column
+          one and the buttons into column two — the lockup was centred only on
+          desktop. Explicit `col-start` values hold the three slots regardless
+          of which children are currently rendered.
+        */}
+        <div className="mx-auto grid h-[var(--header-height)] max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-5 sm:px-8">
           <nav
             aria-label="Main"
-            className="hidden items-center gap-0.5 lg:flex"
+            className="col-start-1 hidden items-center gap-0.5 justify-self-start lg:flex"
           >
             {NAV_LINKS.map((link) => {
               const id = link.href.replace("#", "");
@@ -161,7 +175,15 @@ export function SiteHeader() {
             })}
           </nav>
 
-          <div className="flex items-center gap-3">
+          <a
+            href="#top"
+            className="col-start-2 justify-self-center rounded-lg"
+            aria-label={`${BRAND.name} — back to top`}
+          >
+            <BrandMark size="xl" />
+          </a>
+
+          <div className="col-start-3 flex items-center gap-3 justify-self-end">
             {/* Both of these are wrapped rather than given a `hidden` class
                 directly: each already carries `inline-flex` in its own base
                 styles, and two display utilities of equal specificity resolve
@@ -257,6 +279,21 @@ export function SiteHeader() {
             >
               Book a court
             </Cta>
+
+            {/* A tap-to-call on the one surface where the visitor is already
+                holding a phone. */}
+            {PRIMARY_PHONE ? (
+              <Cta
+                href={`tel:${PRIMARY_PHONE}`}
+                variant="secondary"
+                size="lg"
+                className="w-full"
+                onClick={() => setOpen(false)}
+              >
+                <PhoneIcon className="size-4" />
+                {formatPhone(PRIMARY_PHONE)}
+              </Cta>
+            ) : null}
 
             <Cta
               href={CONTACT.instagram}

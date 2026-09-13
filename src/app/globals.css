@@ -86,10 +86,19 @@
 
 :root {
   color-scheme: dark;
-  --header-height: 4.5rem;
+  /* Tall enough for the centred logo lockup. Everything that clears the
+     header — scroll padding, the hero's top offset — reads this variable,
+     so the two can never fall out of step. */
+  --header-height: 5rem;
   /* Height of the sticky mobile booking bar, so the page can reserve space
      for it and nothing ends up permanently hidden behind it. */
   --bookbar-height: 4.75rem;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --header-height: 6rem;
+  }
 }
 
 html {

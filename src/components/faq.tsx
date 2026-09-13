@@ -2,10 +2,10 @@ import { Cta } from "./ui/cta";
 import { Reveal } from "./ui/reveal";
 import { Section } from "./ui/section";
 import { PlusIcon } from "./ui/icons";
-import { CONTACT, FAQS } from "@/content/site";
+import { CONTACT, FAQS, PRIMARY_PHONE } from "@/content/site";
 
 export function Faq() {
-  const enquiryHref = CONTACT.phone ? `tel:${CONTACT.phone}` : CONTACT.instagram;
+  const enquiryHref = PRIMARY_PHONE ? `tel:${PRIMARY_PHONE}` : CONTACT.instagram;
 
   return (
     <Section

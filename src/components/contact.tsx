@@ -11,7 +11,7 @@ import {
   PhoneIcon,
   WhatsAppIcon,
 } from "./ui/icons";
-import { BRANCHES, CONTACT } from "@/content/site";
+import { BRANCHES, CONTACT, formatPhone, PRIMARY_PHONE } from "@/content/site";
 import { formatHours } from "@/lib/hours";
 
 /** What people actually message the academy about. */
@@ -37,23 +37,25 @@ type Channel = {
 function buildChannels(): Channel[] {
   const channels: Channel[] = [];
 
-  if (CONTACT.phone) {
+  // One card per published number. Labelled "Call" and "Call (alternate)" so
+  // the second does not read as a duplicate of the first.
+  CONTACT.phones.forEach((phone, index) => {
     channels.push({
-      key: "phone",
+      key: `phone-${phone}`,
       Glyph: PhoneIcon,
-      label: "Call",
-      value: CONTACT.phone,
-      href: `tel:${CONTACT.phone}`,
+      label: index === 0 ? "Call" : "Call (alternate)",
+      value: formatPhone(phone),
+      href: `tel:${phone}`,
     });
-  }
+  });
 
-  const whatsapp = CONTACT.whatsapp ?? CONTACT.phone;
+  const whatsapp = CONTACT.whatsapp ?? PRIMARY_PHONE;
   if (whatsapp) {
     channels.push({
       key: "whatsapp",
       Glyph: WhatsAppIcon,
       label: "WhatsApp",
-      value: whatsapp,
+      value: formatPhone(whatsapp),
       // wa.me expects the number without "+" or separators.
       href: `https://wa.me/${whatsapp.replace(/[^\d]/g, "")}`,
     });
